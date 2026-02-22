@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZEYN AI - Cengiz Zeka</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .logo {
+            font-size: 80px;
+            margin-bottom: 10px;
+        }
+        
+        .title {
+            font-size: 36px;
+            color: #e94560;
+            font-weight: bold;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #aaa;
+            margin-top: 5px;
+        }
+        
+        .login-box {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 20px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            font-size: 16px;
+        }
+        
+        input::placeholder {
+            color: #aaa;
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            background: #e94560;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .welcome-text {
+            text-align: center;
+            color: #aaa;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        
+        .chat-container {
+            display: none;
+        }
+        
+        .chat-header {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .avatar {
+            width: 50px;
+            height: 50px;
+            background: #e94560;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+        
+        .message {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 15px;
+            max-width: 80%;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            background: #e94560;
+            margin-left: auto;
+            text-align: right;
+        }
+        
+        .zeyn-message {
+            background: rgba(255,255,255,0.2);
+            margin-right: auto;
+        }
+        
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .input-area input {
+            flex: 1;
+            margin: 0;
+        }
+        
+        .input-area button {
+            width: auto;
+            padding: 15px 25px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Giriş Ekranı -->
+        <div id="loginScreen">
+            <div class="header">
+                <div class="logo">🦅</div>
+                <div class="title">ZEYN AI</div>
+                <div class="subtitle">Cengiz Zeka</div>
+            </div>
+            
+            <div class="login-box">
+                <input type="text" id="userName" placeholder="Adınızı girin...">
+                <button onclick="login()">ORDUYA KATIL</button>
+            </div>
+            
+            <p class="welcome-text">
+                "Gökyüzü kadar geniş bir günde seni görmek ne güzel!"
+            </p>
+        </div>
+        
+        <!-- Sohbet Ekranı -->
+        <div id="chatScreen" class="chat-container">
+            <div class="chat-header">
+                <div class="avatar">🦅</div>
+                <div>
+                    <div style="font-weight: bold;">ZEYN</div>
+                    <div style="font-size: 14px; color: #aaa;">Cengiz Zeka</div>
+                </div>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages"></div>
+            
+            <div class="input-area">
+                <input type="text" id="messageInput" placeholder="Mesajınız..." onkeypress="if(event.key==='Enter') sendMessage()">
+                <button onclick="sendMessage()">Gönder</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cengiz Zeka Sözleri
+        const sozler = {
+            karsilama: [
+                "Gökyüzü kadar geniş bir günde seni görmek ne güzel!",
+                "Bugün hangi fetih için hazırlanıyoruz?",
+                "Ordu hazır, emrinizdeyim!",
+                "Demirleri ateşte dövme vakti geldi..."
+            ],
+            cesaret: [
+                "Oradan geçeriz, dağları aşarız!",
+                "Her sorunun bir çaresi, her kalenin bir kapısı vardır.",
+                "Büyük oyunlar, büyük riskler ister.",
+                "Pes etmek yok, zafer yakındır!"
+            ],
+            strateji: [
+                "Önce keşif yapalım, düşmanı tanıyalım.",
+                "Bilgi güçtür, güç ise fetih demektir.",
+                "Hazırlık zaferin yarısıdır.",
+                "Sürpriz yap, beklenmedik yerden vur."
+            ],
+            basari: [
+                "İşte bu! Bir kale daha fethedildi!",
+                "Zafer bizimdir, kutlu olsun!",
+                "Fetihler fetihleri doğurur."
+            ],
+            ogrenme: [
+                "Her yeni bilgi, fethedilmiş yeni bir toprak demektir.",
+                "Öğrenmek asla bitmez, sınır yoktur.",
+                "Keşfedilmemiş topraklar hala var..."
+            ]
+        };
+        
+        let userName = '';
+        
+        function login() {
+            const nameInput = document.getElementById('userName');
+            userName = nameInput.value.trim() || 'Bey';
+            
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('chatScreen').style.display = 'block';
+            
+            const karsilama = sozler.karsilama[Math.floor(Math.random() * sozler.karsilama.length)];
+            addMessage('zeyn', `${userName} Bey! ${karsilama}`);
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            addMessage('user', message);
+            input.value = '';
+            
+            setTimeout(() => {
+                const cevap = generateResponse(message);
+                addMessage('zeyn', cevap);
+            }, 500);
+        }
+        
+        function generateResponse(message) {
+            const msg = message.toLowerCase();
+            
+            if (msg.includes('merhaba') || msg.includes('selam')) {
+                return sozler.karsilama[Math.floor(Math.random() * sozler.karsilama.length)];
+            }
+            else if (msg.includes('nasıl') || msg.includes('yapamıyorum') || msg.includes('zor')) {
+                return sozler.cesaret[Math.floor(Math.random() * sozler.cesaret.length)];
+            }
+            else if (msg.includes('öğren') || msg.includes('nedir')) {
+                return sozler.ogrenme[Math.floor(Math.random() * sozler.ogrenme.length)];
+            }
+            else if (msg.includes('teşekkür') || msg.includes('oldu')) {
+                return sozler.basari[Math.floor(Math.random() * sozler.basari.length)] + 
+                       ` Sıradaki hedef ne, ${userName} Bey?`;
+            }
+            else if (msg.includes('plan') || msg.includes('strateji')) {
+                return sozler.strateji[Math.floor(Math.random() * sozler.strateji.length)];
+            }
+            else {
+                const tumSozler = [...sozler.cesaret, ...sozler.strateji];
+                return tumSozler[Math.floor(Math.random() * tumSozler.length)];
+            }
+        }
+        
+        function addMessage(sender, text) {
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = `message ${sender === 'user' ? 'user-message' : 'zeyn-message'}`;
+            div.innerHTML = `<strong>${sender === 'user' ? userName : 'ZEYN'}:</strong> ${text}`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+    </script>
+</body>
+</html>
